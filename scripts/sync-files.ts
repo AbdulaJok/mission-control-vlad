@@ -111,7 +111,7 @@ async function main() {
   try {
     // Синхронизация задач
     const tasksPath = path.join(WORKSPACE_ROOT, 'memory', 'tasks.md');
-    let tasks = [];
+    let tasks: any[] = [];
     
     if (fs.existsSync(tasksPath)) {
       const tasksContent = fs.readFileSync(tasksPath, 'utf-8');
