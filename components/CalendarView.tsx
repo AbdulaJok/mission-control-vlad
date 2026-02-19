@@ -21,18 +21,16 @@ export default function CalendarView({ events }: CalendarViewProps) {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const getSourceBadge = (source: string) => {
-    const styles = {
+    const styles: Record<string, string> = {
       google: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
       cron: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
       manual: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
     };
-    
-    const icons = {
+    const icons: Record<string, string> = {
       google: '📧',
       cron: '⏰',
       manual: '📝',
     };
-    
     return (
       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${styles[source]}`}>
         <span className="mr-1">{icons[source]}</span>
@@ -61,7 +59,6 @@ export default function CalendarView({ events }: CalendarViewProps) {
     const duration = end - start;
     const hours = Math.floor(duration / 3600000);
     const minutes = Math.floor((duration % 3600000) / 60000);
-    
     if (hours > 0) {
       return `${hours}ч ${minutes}м`;
     }
@@ -145,7 +142,7 @@ export default function CalendarView({ events }: CalendarViewProps) {
             </div>
           </div>
         ))}
-        
+
         {events.length === 0 && (
           <div className="text-center py-12">
             <Calendar className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
