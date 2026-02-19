@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { Id } from "./_generated/dataModel";
 
 // Получить события календаря
 export const list = query({
@@ -50,7 +51,7 @@ export const create = mutation({
 
 // Удалить событие
 export const remove = mutation({
-  args: { id: v.string() },
+  args: { id: v.id("events") },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
   },
