@@ -1,11 +1,12 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { Id } from "./_generated/dataModel";
 
 // Получить все задачи
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("tasks").order("desc").collect();
+    return await ctx.db.query("tasks").collect();
   },
 });
 
@@ -27,7 +28,6 @@ export const create = mutation({
   handler: async (ctx, args) => {
     const now = Date.now();
     const taskId = `task_${now}`;
-    
     await ctx.db.insert("tasks", {
       id: taskId,
       title: args.title,
@@ -37,7 +37,6 @@ export const create = mutation({
       createdAt: now,
       updatedAt: now,
     });
-    
     return taskId;
   },
 });
@@ -45,19 +44,16 @@ export const create = mutation({
 // Обновить статус задачи
 export const updateStatus = mutation({
   args: {
-    id: v.string(),
+    id: v.id("tasks"),
     status: v.union(v.literal("todo"), v.literal("in_progress"), v.literal("done")),
   },
   handler: async (ctx, args) => {
     const now = Date.now();
     const task = await ctx.db.get(args.id);
-    
     if (!task) {
       throw new Error(`Task ${args.id} not found`);
     }
-
     const completedAt = args.status === "done" ? now : undefined;
-    
     await ctx.db.patch(args.id, {
       status: args.status,
       updatedAt: now,
@@ -68,7 +64,7 @@ export const updateStatus = mutation({
 
 // Удалить задачу
 export const remove = mutation({
-  args: { id: v.string() },
+  args: { id: v.id("tasks") },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
   },
@@ -103,7 +99,6 @@ export const syncFromFiles = mutation({
     // Обновляем или создаем задачи
     for (const taskData of args.tasks) {
       const existing = existingTasks.find(t => t.id === taskData.id);
-      
       if (existing) {
         // Обновляем
         await ctx.db.patch(existing._id, {
