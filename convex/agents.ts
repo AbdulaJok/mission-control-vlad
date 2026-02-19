@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { Id } from "./_generated/dataModel";
 
 // Получить всех агентов
 export const list = query({
@@ -12,7 +13,7 @@ export const list = query({
 // Обновить статус агента
 export const updateStatus = mutation({
   args: {
-    id: v.string(),
+    id: v.id("agents"),
     status: v.union(v.literal("idle"), v.literal("working"), v.literal("offline")),
     currentTask: v.optional(v.string()),
   },
