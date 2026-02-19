@@ -71,12 +71,12 @@ export default function TasksBoard({ tasks }: TasksBoardProps) {
   };
 
   const handleStatusChange = (taskId: string, newStatus: 'todo' | 'in_progress' | 'done') => {
-    updateStatus({ id: taskId, status: newStatus });
+    updateStatus({ id: taskId as any, status: newStatus });
   };
 
   const handleDelete = (taskId: string) => {
     if (confirm('Удалить эту задачу?')) {
-      removeTask({ id: taskId });
+      removeTask({ id: taskId as any });
     }
   };
 
