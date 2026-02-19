@@ -1,51 +1,40 @@
-# Mission Control — Jake's Digital Office
+# 🚀 Mission Control
 
-Панель управления цифровым тандемом Влад + Jake.
+OpenClaw Dashboard — Tasks, Memory, Calendar, Team, Office.
 
-## 🚀 Быстрый старт
+## Quick Start
 
-### 1. Установка зависимостей
-```bash
-npm install
-```
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-### 2. Настройка окружения
-Создай файл `.env.local` в корне проекта:
-```bash
-NEXT_PUBLIC_CONVEX_URL=<твой_url_из_convex>
-GITHUB_CLIENT_ID=<опционально_для_авторизации>
-GITHUB_CLIENT_SECRET=<опционально_для_авторизации>
-NEXTAUTH_SECRET=<опционально_для_авторизации>
-NEXTAUTH_URL=http://localhost:3000
-```
+2. **Setup Environment:**
+   - Copy `.env.example` to `.env.local`:
+     ```bash
+     cp .env.example .env.local
+     ```
+   - Edit `.env.local` and add your credentials:
+     - `GITHUB_CLIENT_ID` & `GITHUB_CLIENT_SECRET` (from GitHub OAuth)
+     - `CONVEX_DEPLOYMENT` (from `npx convex dev`)
+     - `NEXTAUTH_SECRET` (generate with `openssl rand -base64 32`)
 
-### 3. Запуск Convex
-В отдельном терминале:
-```bash
-npx convex dev
-```
+3. **Run Convex Backend:**
+   ```bash
+   npx convex dev
+   ```
+   (Keep this running in a separate terminal)
 
-### 4. Запуск приложения
-```bash
-npm run dev
-```
+4. **Run Next.js Frontend:**
+   ```bash
+   npm run dev
+   ```
 
-Открой http://localhost:3000
+5. **Open:** http://localhost:3000
 
-## 🏗️ Архитектура
+## Structure
 
-- **Frontend:** NextJS 14 (App Router) + Tailwind CSS
-- **Backend/DB:** Convex (реальное время, серверные функции)
-- **Синхронизация:** Скрипт `sync-files.ts` читает `.md` файлы и пушит в Convex
-
-## 📁 Структура
-
-- `convex/` — Бэкенд логика и схема БД
-- `app/` — Frontend страницы
-- `components/` — UI компоненты
-- `scripts/` — Утилиты синхронизации
-
-## 🔒 Безопасность
-
-- GitHub OAuth (настраивается при деплое)
-- Локальные секреты только в `.env.local` (не коммитить!)
+- `app/tasks` — Tasks Board (Todo/In Progress/Done)
+- `app/memory` — Memory Vault (Searchable insights)
+- `convex/` — Backend schema & functions
+- `.env.local` — **Your secrets (DO NOT COMMIT)**
