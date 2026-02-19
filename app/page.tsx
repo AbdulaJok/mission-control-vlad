@@ -4,13 +4,12 @@ import { useQuery } from 'convex/react';
 import { api } from '../convex/_generated/api';
 import TasksBoard from '@/components/TasksBoard';
 import MemoryVault from '@/components/MemoryVault';
-import TeamView from '@/components/TeamView';
-import { Activity, Brain, Users } from 'lucide-react';
+import { Activity, Brain } from 'lucide-react';
 
 export default function Home() {
   const tasks = useQuery(api.tasks.list);
   const memories = useQuery(api.memories.listRecent, { limit: 10 });
-  const agents = useQuery(api.agents.list);
+  // const agents = useQuery(api.agents.list); // Temporarily disabled - agents table not in schema yet
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -52,19 +51,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Правая колонка - Team и Memory */}
+          {/* Правая колонка - только Memory (Team временно отключен) */}
           <div className="space-y-8">
-            {/* Team View */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <div className="flex items-center mb-4">
-                <Users className="w-5 h-5 text-purple-500 mr-2" />
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Team
-                </h2>
-              </div>
-              <TeamView agents={agents || []} />
-            </div>
-
             {/* Memory Vault */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
               <div className="flex items-center mb-4">

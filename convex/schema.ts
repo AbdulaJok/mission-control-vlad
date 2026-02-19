@@ -9,15 +9,35 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   }),
+
   memories: defineTable({
     content: v.string(),
     category: v.union(v.literal("decision"), v.literal("lesson"), v.literal("fact"), v.literal("project")),
     createdAt: v.number(),
   }),
+
   calendarEvents: defineTable({
     title: v.string(),
     startTime: v.number(),
     endTime: v.number(),
     location: v.optional(v.string()),
+  }),
+
+  agents: defineTable({
+    id: v.string(),
+    name: v.string(),
+    role: v.string(),
+    status: v.union(v.literal("idle"), v.literal("working"), v.literal("offline")),
+    avatar: v.optional(v.string()),
+    lastSeen: v.number(),
+  }),
+
+  events: defineTable({
+    id: v.string(),
+    title: v.string(),
+    startTime: v.number(),
+    endTime: v.number(),
+    location: v.optional(v.string()),
+    source: v.union(v.literal("google"), v.literal("notion"), v.literal("manual")),
   }),
 });
