@@ -4,13 +4,12 @@ import { Id } from "./_generated/dataModel";
 
 // Получить события календаря
 export const list = query({
-  args: { 
+  args: {
     from: v.optional(v.number()),
     to: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     let events = await ctx.db.query("events").order("asc").collect();
-    
     // Фильтрация по дате если указано
     if (args.from) {
       events = events.filter(e => e.startTime >= args.from!);
@@ -18,7 +17,6 @@ export const list = query({
     if (args.to) {
       events = events.filter(e => e.startTime <= args.to!);
     }
-    
     return events;
   },
 });
@@ -33,25 +31,20 @@ export const create = mutation({
     description: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const now = Date.now();
-    const eventId = `event_${now}`;
-    
     await ctx.db.insert("events", {
-      id: eventId,
       title: args.title,
       startTime: args.startTime,
       endTime: args.endTime,
       source: args.source || "manual",
-      description: args.description,
     });
-    
-    return eventId;
   },
 });
 
 // Удалить событие
 export const remove = mutation({
-  args: { id: v.id("events") },
+  args: {
+    id: v.id("events")
+  },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
   },
@@ -61,48 +54,38 @@ export const remove = mutation({
 export const syncFromSources = mutation({
   args: {
     events: v.array(v.object({
-      id: v.string(),
       title: v.string(),
       startTime: v.number(),
       endTime: v.optional(v.number()),
       source: v.union(v.literal("google"), v.literal("cron"), v.literal("manual")),
-      description: v.optional(v.string()),
     })),
   },
   handler: async (ctx, args) => {
-    const now = Date.now();
-    
     const existingEvents = await ctx.db.query("events").collect();
-    const existingIds = new Set(existingEvents.map(e => e.id));
-    const incomingIds = new Set(args.events.map(e => e.id));
-    
-    // Удаляем старые
+    const incomingTitles = new Set(args.events.map(e => e.title));
+
+    // Удаляем старые (простая эвристика: если титул не совпадает)
     for (const event of existingEvents) {
-      if (!incomingIds.has(event.id)) {
+      if (!incomingTitles.has(event.title)) {
         await ctx.db.delete(event._id);
       }
     }
-    
+
     // Обновляем или создаем
     for (const eventData of args.events) {
-      const existing = existingEvents.find(e => e.id === eventData.id);
-      
+      const existing = existingEvents.find(e => e.title === eventData.title);
       if (existing) {
         await ctx.db.patch(existing._id, {
-          title: eventData.title,
           startTime: eventData.startTime,
           endTime: eventData.endTime,
           source: eventData.source,
-          description: eventData.description,
         });
       } else {
         await ctx.db.insert("events", {
-          id: eventData.id,
           title: eventData.title,
           startTime: eventData.startTime,
           endTime: eventData.endTime,
           source: eventData.source,
-          description: eventData.description,
         });
       }
     }

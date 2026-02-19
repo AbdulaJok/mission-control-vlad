@@ -24,16 +24,14 @@ export default defineSchema({
   }),
 
   agents: defineTable({
-    id: v.string(),
     name: v.string(),
     role: v.string(),
     status: v.union(v.literal("idle"), v.literal("working"), v.literal("offline")),
-    avatar: v.optional(v.string()),
+    currentTask: v.optional(v.string()),
     lastSeen: v.number(),
   }),
 
   events: defineTable({
-    id: v.string(),
     title: v.string(),
     startTime: v.number(),
     endTime: v.number(),
