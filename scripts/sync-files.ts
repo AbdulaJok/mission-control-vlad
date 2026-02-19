@@ -54,7 +54,7 @@ function parseTasksFile(content: string) {
 
 // Парсинг daily logs
 function parseDailyLogs() {
-  const memories = [];
+  const memories: any[] = [];
   const memoryDir = path.join(WORKSPACE_ROOT, 'memory');
   
   if (!fs.existsSync(memoryDir)) {
