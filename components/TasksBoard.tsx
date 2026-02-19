@@ -20,8 +20,8 @@ interface TasksBoardProps {
 }
 
 export default function TasksBoard({ tasks }: TasksBoardProps) {
-  const updateStatus = useMutation(api.tasks.updateStatus);
-  const removeTask = useMutation(api.tasks.remove);
+  const updateStatus = useMutation(api.tasks.toggleStatus);
+  const removeTask = useMutation(api.tasks.deleteTask);
 
   const getStatusIcon = (status: string) => {
     switch (status) {

@@ -9,7 +9,10 @@ export const list = query({
 });
 
 export const create = mutation({
-  args: { title: v.string(), priority: v.union(v.literal("low"), v.literal("medium"), v.literal("high")) },
+  args: {
+    title: v.string(),
+    priority: v.union(v.literal("low"), v.literal("medium"), v.literal("high")),
+  },
   handler: async (ctx, args) => {
     const now = Date.now();
     await ctx.db.insert("tasks", {
@@ -22,19 +25,22 @@ export const create = mutation({
   },
 });
 
-export const toggleStatus = mutation({
-  args: { id: v.id("tasks") },
+export const updateStatus = mutation({
+  args: { 
+    id: v.id("tasks"),
+    status: v.union(v.literal("todo"), v.literal("in_progress"), v.literal("done")),
+  },
   handler: async (ctx, args) => {
     const task = await ctx.db.get(args.id);
     if (!task) throw new Error("Task not found");
     await ctx.db.patch(args.id, {
-      status: task.status === "done" ? "todo" : "done",
+      status: args.status,
       updatedAt: Date.now(),
     });
   },
 });
 
-export const delete = mutation({
+export const remove = mutation({
   args: { id: v.id("tasks") },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
